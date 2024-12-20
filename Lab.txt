@@ -1,0 +1,35 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_PAGES 10
+#define MAX_FRAMES 5
+void paging(int pages[], int num_pages, int frames[], int num_frames) {
+    int pageTable[MAX_PAGES],pageFaults = 0;
+    for (int i = 0; i < num_frames; i++) {frames[i] = -1;}
+    printf("\nSimulating Paging:\n");printf("\nPage\t\tFrame Number\n");
+    for (int i = 0; i < num_pages; i++) {
+        int page = pages[i] ,found = 0;
+        for (int j = 0; j < num_frames; j++) {
+            if (frames[j] == page) {found = 1; break;}}
+        if (!found) { pageFaults++;
+            int empty_frame = -1;
+            for (int j = 0; j < num_frames; j++) {
+                if (frames[j] == -1) { empty_frame = j; break;}}
+            if (empty_frame == -1) {
+                for (int j = 0; j < num_frames - 1; j++) {
+                    frames[j] = frames[j + 1]; }
+                frames[num_frames - 1] = page;} 
+            else { frames[empty_frame] = page;}
+            for (int j = 0; j < num_frames; j++) {printf("%d\t\t", frames[j]);}
+            printf("\n");}}
+    printf("\nTotal page faults: %d\n", pageFaults);}
+
+int main() {
+    int pages[MAX_PAGES], num_pages, frames[MAX_FRAMES], num_frames;
+    printf("Enter the number of pages: "); scanf("%d", &num_pages);
+    printf("Enter the pages (logical memory): ");
+    for (int i = 0; i < num_pages; i++) {scanf("%d", &pages[i]);}
+    printf("Enter the number of frames (physical memory): ");scanf("%d", &num_frames);
+    paging(pages, num_pages, frames, num_frames);
+    return 0;}
